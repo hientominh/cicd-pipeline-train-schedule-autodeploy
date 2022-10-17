@@ -70,7 +70,7 @@ pipeline {
                     sh 'mkdir -p ~/.kube'
                     sh 'cat $KUBECRED > ~/.kube/config'
                     sh 'envsubst < train-schedule-kube-canary.yml > train-schedule-kube-canary-out.yml'
-                    sh 'kubectl apply -f train-schedule-kube-canary.yml'
+                    sh 'kubectl apply -f train-schedule-kube-canary-out.yml'
                     sh 'envsubst < train-schedule-kube.yml > train-schedule-kube-out.yml'
                     sh 'kubectl apply -f train-schedule-kube-out.yml'
                 }
