@@ -48,11 +48,11 @@ pipeline {
                 CANARY_REPLICAS = 1
             }
             steps {
-                kubernetesDeploy(
-                    kubeconfigId: 'kubeconfig',
-                    configs: 'train-schedule-kube-canary.yml',
-                    enableConfigSubstitution: true
-                )
+                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECRED')]) {
+                    sh 'mkdir -p ~/.kube'
+                    sh 'cat $KUBECRED > ~/.kube/config'
+                    sh 'kubectl apply -f train-schedule-kube-canary.yml'
+                }
             }
         }
         stage('DeployToProduction') {
@@ -65,16 +65,12 @@ pipeline {
             steps {
                 input 'Deploy to Production?'
                 milestone(1)
-                kubernetesDeploy(
-                    kubeconfigId: 'kubeconfig',
-                    configs: 'train-schedule-kube-canary.yml',
-                    enableConfigSubstitution: true
-                )
-                kubernetesDeploy(
-                    kubeconfigId: 'kubeconfig',
-                    configs: 'train-schedule-kube.yml',
-                    enableConfigSubstitution: true
-                )
+                withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECRED')]) {
+                    sh 'mkdir -p ~/.kube'
+                    sh 'cat $KUBECRED > ~/.kube/config'
+                    sh 'kubectl apply -f train-schedule-kube-canary.yml'
+                    sh 'kubectl apply -f train-schedule-kube.yml'
+                }
             }
         }
     }
