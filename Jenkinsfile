@@ -1,8 +1,6 @@
 pipeline {
     agent {
-        node {
-            label: 'slave'
-        }
+        label: 'slave'
     }
     environment {
         //be sure to replace "tominhhien1" with your own Docker Hub username
