@@ -9,9 +9,8 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                sh './gradlew wrapper --gradle-version 7.5.1'
                 echo 'Running build automation'
-                sh './gradlew build --no-daemon'
+                sh 'export JAVA_HOME=/var/lib/jenkins/tools/hudson.model.JDK && ./gradlew build --no-daemon'
                 archiveArtifacts artifacts: 'dist/trainSchedule.zip'
             }
         }
