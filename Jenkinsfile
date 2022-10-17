@@ -51,7 +51,8 @@ pipeline {
                 withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECRED')]) {
                     sh 'mkdir -p ~/.kube'
                     sh 'cat $KUBECRED > ~/.kube/config'
-                    sh 'kubectl apply -f train-schedule-kube-canary.yml'
+                    sh 'envsubst < train-schedule-kube-canary.yml > train-schedule-kube-canary-out.yml'
+                    sh 'kubectl apply -f train-schedule-kube-canary-out.yml'
                 }
             }
         }
@@ -68,8 +69,10 @@ pipeline {
                 withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECRED')]) {
                     sh 'mkdir -p ~/.kube'
                     sh 'cat $KUBECRED > ~/.kube/config'
+                    sh 'envsubst < train-schedule-kube-canary.yml > train-schedule-kube-canary-out.yml'
                     sh 'kubectl apply -f train-schedule-kube-canary.yml'
-                    sh 'kubectl apply -f train-schedule-kube.yml'
+                    sh 'envsubst < train-schedule-kube.yml > train-schedule-kube-out.yml'
+                    sh 'kubectl apply -f train-schedule-kube-out.yml'
                 }
             }
         }
